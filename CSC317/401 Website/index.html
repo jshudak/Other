@@ -1,0 +1,219 @@
+<html>
+<head><title>
+CSC401 Project 2
+</title>
+    
+    <script type="text/javascript">
+        var rand;
+        var globalArray = [];
+        var arrLen = 0;
+        var current_i = 0;
+        var pColor = '#F2A8DE';
+        var bColor = '#3291F8';
+        var oColor = '#F8AA32';
+        var subStep = 0;
+        var showIText = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show[i] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        var swapText = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Swap! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        
+        
+        function createArray(n){
+            var nElem = document.getElementById('nVar');
+            var iElem = document.getElementById('iVar');
+            var randElem = document.getElementById('randVar');
+            var a_lenElem = document.getElementById('aLen');
+            var nButton = document.getElementById('nButton');
+            
+            arrLen = n
+            for(var i=0; i<n; i++) {
+                globalArray[i] = i + 1
+            }
+            
+            nElem.innerHTML = ('n = ' + n);
+            iElem.innerHTML = 'i = ' + (1+current_i);
+            randElem.innerHTML = 'Random(i, n) = ';
+            
+            nElem.style.background = pColor;
+            a_lenElem.style.background = pColor;
+            nButton.innerHTML = showIText;
+            
+        }
+        
+        function updateArray(toSwap) {
+            var arrayNumChildren = document.getElementById('arrayNums').children;
+            console.log(arrayNumChildren)
+            
+            var tempText = arrayNumChildren[toSwap].innerHTML;
+            arrayNumChildren[toSwap].innerHTML = arrayNumChildren[current_i].innerHTML
+            arrayNumChildren[current_i].innerHTML = tempText
+        }
+        
+        function nextStep() {
+            var nElem = document.getElementById('nVar');
+            var forElem = document.getElementById('for');
+            var iElem = document.getElementById('iVar');
+            var ARandElem = document.getElementById('aRand');
+            var randElem = document.getElementById('randVar');
+            var a_lenElem = document.getElementById('aLen');
+            var swapAElem = document.getElementById('swapA');
+            var arrayNumChildren = document.getElementById('arrayNums').children;
+            var nButton = document.getElementById('nButton');
+            
+            
+            switch(subStep) {
+                case(0):
+                    
+                    if(current_i != 0) {
+                        arrayNumChildren[current_i-1].style.background = "White";
+                        ARandElem.style.background = "White";
+                        randElem.style.background = "White";
+                        arrayNumChildren[rand].style.background = "White";
+                    }
+                    
+                    iElem.innerHTML = 'i = ' + (1+current_i);
+                    
+                    if(current_i == 10) {
+                        nButton.innerHTML = "&nbsp;&nbsp;&nbsp;Needs Resetting&nbsp;&nbsp;&nbsp;";
+                        iElem.style.background = pColor;
+                        nElem.style.background = pColor;
+                        forElem.style.background = pColor;
+                        swapAElem.style.background = "White";
+                        break;
+                    }
+                    
+                    swapAElem.style.background = oColor;
+                    iElem.style.background = oColor;
+                    arrayNumChildren[current_i].style.background = oColor;
+                    nElem.style.background = "White";
+                    a_lenElem.style.background = "White";
+                    
+                    nButton.innerHTML = '&nbsp;&nbsp;Generate Random&nbsp;'
+                    subStep = 1;
+                    break;
+                    
+                case(1):
+                    
+                    rand = Math.floor(Math.random()*arrLen);
+                    while (rand == current_i) {
+                        rand = Math.floor(Math.random()*arrLen);
+                    }
+                    randElem.innerHTML = 'Random(i, n) = ' + (rand + 1);
+                    ARandElem.style.background = bColor;
+                    randElem.style.background = bColor;
+                    arrayNumChildren[rand].style.background = bColor;
+                    
+                    nButton.innerHTML = swapText;
+                    subStep = 2;
+                    break;
+            
+                case(2):
+                    console.log(rand);
+                    updateArray(rand);
+                    
+                    swapAElem.style.background = bColor;
+                    iElem.style.background = bColor;
+                    arrayNumChildren[current_i].style.background = bColor;
+                    ARandElem.style.background = oColor;
+                    randElem.style.background = oColor;
+                    arrayNumChildren[rand].style.background = oColor;
+                    
+                    current_i++
+                    nButton.innerHTML = showIText;
+                    subStep = 0;
+                    break;
+                }
+            }
+        
+        function resetArray() {
+            var nElem = document.getElementById('nVar');
+            var forElem = document.getElementById('for');
+            var iElem = document.getElementById('iVar');
+            var ARandElem = document.getElementById('aRand');
+            var randElem = document.getElementById('randVar');
+            var a_lenElem = document.getElementById('aLen');
+            var swapAElem = document.getElementById('swapA');
+            var arrayNumChildren = document.getElementById('arrayNums').children;
+            var nButton = document.getElementById('nButton');
+            subStep = 0;
+            current_i = 0;
+            
+            for(var i=0; i<arrLen; i++) {
+                arrayNumChildren[i].innerHTML = (i+1);
+            }
+            
+            nElem.innerHTML = ('n = ' + arrLen);
+            iElem.innerHTML = 'i = ' + (1+current_i);
+            randElem.innerHTML = 'Random(i, n) = ';
+            
+            forElem.style.background = "White";
+            iElem.style.background = "White";
+            nElem.style.background = pColor;
+            a_lenElem.style.background = pColor;
+            nButton.innerHTML = showIText;
+            
+        }
+    </script>
+</head>
+
+<body onload="createArray(10)">
+    <h2>CSC401 Project 2</h2>
+    <p><i>By Jeffrey Hudak</i></p>
+    <hr>
+    <h2>Randomize In Place</h2>
+    
+    For many algorithms, we would prefer to discus their runtime considering an <i>average</i> scenario, which randomizing an imput helps us acheieve. To represent that idea, we can take an array of ascending numbers and randomize the position of all numbers in the array. This website should help show that idea!
+    
+    <b><br><br>An array of 10 elements:</b>
+        
+    <table>
+        <tr id='arrayNums'>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+            <th>10</th>
+        </tr>
+    </table>
+    
+    <div>
+        <button id='nButton' onclick='nextStep()'>Javascript Broke</button>
+        <button onclick='resetArray()'>Reset</button>
+    </div>
+    
+    <div>
+        <h4>Pseudocode Loops as follows;</h4>
+        <p>
+            &nbsp;&nbsp;  <span id='aLen'>n = A.length</span>
+        </p>
+        
+        <p>
+            &nbsp;&nbsp;  <span id='for'>for i=1 to n:</span>
+        </p>
+        
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span id='swapA'>  swap A[i]</span> with <span id='aRand'>A[Random(i, n)]</span>
+        </p>
+        
+        
+        <h4>Where variables are;</h4>
+        <p>
+            &nbsp;&nbsp;  <span id='nVar'>n = </span>
+        </p>
+        <p>
+           &nbsp;&nbsp;  <span id='iVar'>i = </span>
+        </p>
+        <p>
+             &nbsp;&nbsp;  <span id='randVar'>Random(i, n) = </span>
+        </p>
+        
+    </div>
+        <font color=#FE43F5>
+        <br>JS and HTML Assignment 2
+        <br>Hopefully you apprecaite the portal reference!
+        </font>
+    </body>
+</html>

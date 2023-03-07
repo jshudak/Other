@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CSC401 - Practicum</title>
+		<link rel='stylesheet' type="text/css" href='/resources/css/project2.css'>
+		<link rel="icon" type="image/png" href="/resources/images/favicon.png">
+		<script type="text/javascript">
+
+function changeAlgoLength(newLength) {
+	if (window.speed == undefined) {
+		window.speed = 800; 
+	}
+	window.algoLength = newLength;
+	restartAlgo(newLength);
+}
+
+function restartAlgo() {
+	// Update pseudocode
+	var firstStep = document.getElementById('first-step');
+	firstStep.style = '';
+	var swapStep = document.getElementById('swap-step');
+	swapStep.style = '';
+	var randomStep = document.getElementById('random-step');
+	randomStep.style = '';
+	// Initialize "global" variables
+	window.i = 0;
+	window.random = undefined;
+	window.inLoop = false;
+	window.rStep = true;
+	createArray();
+	updateArray();
+	var iHolder = document.getElementById('i');
+	iHolder.innerHTML = 'i = ';
+	var nHolder = document.getElementById('n');
+	nHolder.innerHTML = 'n = ';
+	var rHolder = document.getElementById('random');
+	rHolder.innerHTML = 'Random(i, n) = ';
+}
+
+function nextAlgoStep() {
+	if (!window.inLoop) {
+		firstStep();
+		window.inLoop = true;
+	}
+	else {
+		// update pseudocode and end if window.i > window.algoLength - 2
+		if (window.i > window.algoLength - 2) {
+			var fStep = document.getElementById('first-step');
+			fStep.style = '';
+			var sStep = document.getElementById('swap-step');
+			sStep.style = '';
+			var rStep = document.getElementById('random-step');
+			rStep.style = '';
+			updateArray();
+			return;
+		}
+		else {
+			nextLoopStep();
+		}
+	}
+}
+
+function firstStep() {
+	var nHolder = document.getElementById('n');
+	nHolder.innerHTML = 'n = ' + window.algoLength;
+	var iHolder = document.getElementById('i');
+	iHolder.innerHTML = 'i = ' + (window.i + 1);
+	var firstStep = document.getElementById('first-step');
+	firstStep.style = 'background-color: #51B1B5; color: white;';
+}
+
+function nextLoopStep() {
+	if (window.rStep == true) {
+		randomStep();
+		window.rStep = false;
+	}
+	else if (window.rStep == false) {
+		swapStep();
+		window.rStep = true;
+	}
+}
+
+function randomStep() {
+	// Do the random part
+	var randomVal = getRandomInt(window.i, window.algoLength - 1);
+	window.random = randomVal;
+	// Update random notifier
+	var randomHolder = document.getElementById('random');
+	randomHolder.innerHTML = 'Random(i, n) = ' + (window.random + 1);
+	// Update pseudocode
+	var firstStep = document.getElementById('first-step');
+	firstStep.style = '';
+	var swapStep = document.getElementById('swap-step');
+	swapStep.style = '';
+	var randomStep = document.getElementById('random-step');
+	randomStep.style = 'background-color: #fcaee6; color: black;';
+	// Update array
+	updateArray();
+}
+
+function swapStep() {
+	// Do the swap part
+	var placeholder = window.arr[window.i];
+	window.arr[window.i] = window.arr[window.random];
+	window.arr[window.random] = placeholder;
+	window.i = window.i + 1;
+	// Update i notifier
+	var iHolder = document.getElementById('i');
+	if (window.i < window.algoLength) {
+		iHolder.innerHTML = 'i = ' + (window.i + 1);
+	}
+	else {
+		iHolder.innerHTML = 'i = ' + window.algoLength;
+	}
+	// Update pseudocode
+	var firstStep = document.getElementById('first-step');
+	firstStep.style = '';
+	var swapStep = document.getElementById('swap-step');
+	swapStep.style = 'background-color: #51B1B5; color: white;';
+	var randomStep = document.getElementById('random-step');
+	randomStep.style = '';
+	// Update array
+	updateArray();
+}
+
+function updateArray() {
+	var algoArrayRow = document.getElementById('algoArrayRow');
+	removeAllChildNodes(algoArrayRow);
+	for (var i = 0; i < window.algoLength; i++) {
+		var algoArrayCell = document.createElement('th');
+		algoArrayCell.innerHTML = window.arr[i];
+		if (window.i !== undefined && i == window.i) {
+			algoArrayCell.style.backgroundColor = '#51B1B5';
+			algoArrayCell.style.color = 'white';
+		}
+		if (window.random !== undefined && i == window.random) {
+			algoArrayCell.style.backgroundColor = '#fcaee6';
+		}
+		if (window.i !== undefined && i < window.i) {
+			algoArrayCell.style.backgroundColor = '#a1edf0';
+		}
+		if (window.i !== undefined && window.i == window.algoLength - 1) {
+			algoArrayCell.style.backgroundColor = '#a1edf0';
+			algoArrayCell.style.color = 'black';
+		}
+		algoArrayRow.appendChild(algoArrayCell);
+	}
+}
+
+// Helper functions
+
+function removeAllChildNodes(parent) {
+	while (parent.replaceChild) {
+		parent.removeChild(parent.firstChild);
+	}
+}
+
+function getRandomInt(min, max) { 
+	return Math.floor(Math.random() * (max - min)) + min + 1; 
+}
+
+function createArray() {
+	var tempArr = []
+	for (var i = 0; i < window.algoLength; i++) {
+		tempArr[tempArr.length] = i + 1;
+	}
+	window.arr = tempArr;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+        </script>
+	</head>
+	<body onload="changeAlgoLength(10)">
+		<h1>
+			CSC 401 - Algorithms Practicum
+		</h1>
+		<hr>
+		<p class='body-text'>
+			This is my practice website, constructed using HTML, CSS, and JavaScript, to create visualizations of the algorithms we use in class.
+		</p>
+		<hr>
+		<h2 class='header'>
+			Project 2: Randomize-In-Place
+		</h2>
+		<p class='body-text'>
+			This is a visualization of the Randomize-In-Place algorithm. You are able to move stepwise through an implementation of the algorithm with arrays of variable length. The pseudocode will help you figure out where in the algorithm you are. Enjoy!
+		</p>
+        
+        
+		<!-- Buttons to Control Model -->
+		<div id='vertical-buttons'>
+			<button onclick='nextAlgoStep()'>Next Step</button>
+			<button onclick='restartAlgo()'>Reset</button>
+		</div>
+        
+        
+		<!-- Model -->
+		<table id='algoArray'>
+			<tr id='algoArrayRow'>
+				<th>1</th>
+				<th>2</th>
+				<th>3</th>
+				<th>4</th>
+				<th>5</th>
+				<th>6</th>
+				<th>7</th>
+				<th>8</th>
+				<th>9</th>
+				<th>10</th>
+			</tr>
+		</table>
+		<div class='center-table'>
+            
+            
+			<!-- Pseudocode -->
+			<div id='left'>
+				<h2>
+					RandomizeInPlace()
+				</h2>
+				<p>
+					1 &nbsp; &nbsp; <span id='first-step'>n = A.length</span>
+				</p>
+				<p>
+					2 &nbsp; &nbsp; for i = 1 to n
+				</p>
+				<p>
+					3 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span id='swap-step'>swap A[i]</span> with <span id='random-step'>A[Random(i, n)]</span>
+				</p>
+			</div>
+            
+            
+			<!-- Variables -->
+			<div id='right'>
+				<h2>
+					Variables
+				</h2>
+				<p>
+					<span id='n'>n = </span>
+				</p>
+				<p>
+					<span id='i'>i = </span>
+				</p>
+				<p>
+					<span id='random'>Random(i, n) = </span>
+				</p>
+			</div>
+		</div>
+		<hr>
+		<ul>
+			<li><a href="/index.html">Home</a></li>
+			<li><a href="/projects/project1a">Project 1A</a></li>
+			<li><a href="/projects/project1b">Project 1B</a></li>
+			<li><a class='active' href="/projects/project2">Project 2</a></li>
+			<li><a href="/projects/project3.html">Project 3</a></li>
+		</ul>
+	</body>
+</html>
