@@ -1,2 +1,2 @@
-# Other
-A collection of code and other assignments from any classes that were not focused in Java or Python. 
+#AP Computer Science
+A look back in time into my first time coding in my high school AP Computer Science class that primarily focused on Java.
